@@ -70,7 +70,7 @@ func (t *tlsCheckScraper) scrapeLocalTLSCheck(now pcommon.Timestamp, cert *x509.
 }
 
 func (t *tlsCheckScraper) scrapeRemoteTLSCheck(now pcommon.Timestamp) (err error) {
-	err = t.Client.DialWithDialer(t.Config.Endpoint)
+	err = t.Client.TLSConnect(t.Config.Endpoint)
 	if err != nil {
 		return err
 	}

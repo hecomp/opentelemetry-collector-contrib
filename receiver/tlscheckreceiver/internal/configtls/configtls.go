@@ -29,7 +29,7 @@ type TLSCertsClientSettings struct {
 type Client struct {
 	*tls.Conn
 	*tls.Config
-	DialWithDialerFunc func(dialer *net.Dialer, network string, addr string, config *tls.Config) (*tls.Conn, error)
+	DialFunc func(dialer *net.Dialer, network string, addr string, config *tls.Config) (*tls.Conn, error)
 }
 
 type TLSClient struct {
@@ -37,11 +37,11 @@ type TLSClient struct {
 	*tls.Config
 }
 
-func (c *Client) DialWithDialer(address string) (err error) {
+func (c *Client) TLSConnect(address string) (err error) {
 	dialer := &net.Dialer{
 		Timeout: 5 * time.Second,
 	}
-	c.Conn, err = c.DialWithDialerFunc(dialer, network, address, c.Config)
+	c.Conn, err = c.DialFunc(dialer, network, address, c.Config)
 	if err != nil {
 		return err
 	}
@@ -60,6 +60,6 @@ func (t *TLSCertsClientSettings) ToClient(host component.Host, settings componen
 		Config: &tls.Config{
 			InsecureSkipVerify: t.TLSSetting.InsecureSkipVerify,
 		},
-		DialWithDialerFunc: tls.DialWithDialer,
+		DialFunc: tls.DialWithDialer,
 	}, nil
 }

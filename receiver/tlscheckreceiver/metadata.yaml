@@ -31,18 +31,14 @@ metrics:
     enabled: true
     description: Day duration of timespan certificate is issued for.
     unit: s
-    sum:
+    gauge:
       value_type: int
-      aggregation: cumulative
-      monotonic: false
   tlscheck.issued_seconds:
     enabled: true
     description: Second duration of timespan certificate is issued for.
     unit: s
-    sum:
+    gauge:
       value_type: int
-      aggregation: cumulative
-      monotonic: false
   tlscheck.error:
     description: Records errors occurring during HTTP check.
     enabled: true

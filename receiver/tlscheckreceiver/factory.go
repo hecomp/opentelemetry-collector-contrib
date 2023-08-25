@@ -44,11 +44,10 @@ func NewFactory() receiver.Factory {
 
 func createDefaultConfig() component.Config {
 	return &Config{
-		ScraperControllerSettings: scraperhelper.ScraperControllerSettings{
-			CollectionInterval: 10 * time.Second,
-		},
+		ScraperControllerSettings: scraperhelper.NewDefaultScraperControllerSettings(typeStr),
 		TLSCertsClientSettings: configtls.TLSCertsClientSettings{
-			Timeout: 10 * time.Second,
+			Endpoint: defaultEndpoint,
+			Timeout:  10 * time.Second,
 		},
 		MetricsBuilderConfig: metadata.DefaultMetricsBuilderConfig(),
 	}

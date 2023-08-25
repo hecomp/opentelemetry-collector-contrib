@@ -6,7 +6,6 @@ import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/tlscheckreceiver/internal/configtls"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/tlscheckreceiver/internal/metadata"
 	"go.opentelemetry.io/collector/receiver/scraperhelper"
-	"go.uber.org/multierr"
 	"net/url"
 )
 
@@ -26,13 +25,14 @@ type Config struct {
 
 // Validate validates the configuration by checking for missing or invalid fields
 func (cfg *Config) Validate() error {
-	var err error
-
-	_, parseErr := url.Parse(cfg.Endpoint)
-	if parseErr != nil {
-		wrappedErr := fmt.Errorf("%s: %w", errInvalidEndpoint.Error(), parseErr)
-		err = multierr.Append(err, wrappedErr)
+	_, err := url.Parse(cfg.Endpoint)
+	if err != nil {
+		return fmt.Errorf("invalid endpoint: '%s': %w", cfg.Endpoint, err)
 	}
 
-	return err
+	if cfg.TLSSetting.TLSSetting.CertFile == "" {
+		return errInvalidCertPath
+	}
+
+	return nil
 }
